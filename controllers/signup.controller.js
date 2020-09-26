@@ -1,5 +1,8 @@
 const database = require("../config/database");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const { JWT_SECRET } = process.env;
 
 exports.signup = async(req, res)=>{
     await database.query(
@@ -23,6 +26,7 @@ exports.signup = async(req, res)=>{
           lastname TEXT, 
           password TEXT, 
           account INT,
+          token TEXT,
           createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (account)references accounts(acc_id)
         )`,
@@ -45,7 +49,11 @@ exports.signup = async(req, res)=>{
        });
    }
    password = await bcrypt.hash(password, 10);
-   database.query("insert into users(email, password) values(?, ?)", [email, password], (error, result, fields)=>{
+   let token = await jwt.sign({
+       email,
+   }, JWT_SECRET);
+
+   database.query("INSERT INTO users(email, password, token) VALUES(?, ?, ?)", [email, password, token], (error, result, fields)=>{
     if(error){
         console.log(error);
         return res.send(error);
@@ -59,7 +67,8 @@ exports.signup = async(req, res)=>{
             user: {
                 user_id: result.insertId,
                 email,
-                password
+                password,
+                token
             }
         }
     });

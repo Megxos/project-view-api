@@ -1,7 +1,11 @@
 const router = require("express").Router();
 const itemController = require("../controllers/item.controller");
 
-router.post("/", itemController.add);
+const auth = require("../auth/auth").verify;
+
+router.use("/", auth);
+
+router.post("/",itemController.add);
 
 router.post("/complete", itemController.markComplete);
 

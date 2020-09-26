@@ -1,7 +1,8 @@
 const database = require("../config/database");
 
 exports.add = async(req, res)=>{
-    console.log(req);
+    const { item, price, quantity } = req.body
+    const user = req.user.email;
 };
 
 exports.markComplete = async(req, res)=>{
