@@ -7,7 +7,7 @@ router.use("/", auth);
 
 router.post("/",itemController.add);
 
-router.post("/complete", itemController.markComplete);
+router.post("/complete/:item", itemController.markComplete);
 
 router.put("/update/:item", itemController.update);
 

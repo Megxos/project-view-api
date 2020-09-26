@@ -96,6 +96,13 @@ exports.join = async(req, res)=>{
             });
         }
 
-        console.log(result, fields);
+        return res.status(200).json({
+            success: true,
+            message: "operation successful",
+            data: {
+                statusCode: 200,
+                description: "successfully joined "
+            }
+        });
     });
 };
