@@ -5,7 +5,13 @@ const auth = require("../auth/auth").verify;
 
 router.use("/", auth);
 
+router.get("/", itemController.getAll);
+
 router.post("/",itemController.add);
+
+router.get("/pending/:project", itemController.getPending);
+
+router.get("/completed/:project", itemController.getCompleted);
 
 router.post("/complete/:item", itemController.markComplete);
 

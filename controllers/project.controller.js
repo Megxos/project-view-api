@@ -36,38 +36,38 @@ exports.new = async(req, res)=>{
                 });
             }
             console.log("created projects table");
+
+            database.query(
+                `INSERT INTO projects(code, name, owner) VALUES(?, ?, ?)`,
+                [project_code, name, user_id],
+                (error, result, fields) => {
+                    if (error) {
+                        return res.status(500).json({
+                            success: false,
+                            message: "operation unsuccessful",
+                            error: {
+                                statusCode: 500,
+                                description: "could not create project"
+                            }
+                        });
+                    }
+                    return res.status(201).json({
+                        success: true,
+                        message: "operation successful",
+                        data: {
+                            statusCode: 201,
+                            description: "project created successfully",
+                            project: {
+                                id: result.insertId,
+                                name,
+                                code: project_code,
+                                owner: user_id
+                            }
+                        }
+                    });
+                });
         }
     );
-
-    database.query(
-        `INSERT INTO projects(code, name, owner) VALUES(?, ?, ?)`, 
-        [project_code, name, user_id], 
-        (error, result, fields)=>{
-            if(error){
-                return res.status(500).json({
-                    success: false,
-                    message: "operation unsuccessful",
-                    error: {
-                        statusCode: 500,
-                        description: "could not create project"
-                    }
-                });
-            }
-            return res.status(201).json({
-                success: true,
-                message: "operation successful",
-                data: {
-                    statusCode: 201,
-                    description: "project created successfully",
-                    project: {
-                        id: result.insertId,
-                        name,
-                        code: project_code,
-                        owner: user_id
-                    }
-                }
-            });
-        });
 };
 
 exports.join = async(req, res)=>{
