@@ -47,6 +47,7 @@ exports.add = async(req, res)=>{
                       statusCode: 201,
                       description: "account details updated successfully",
                       data: {
+                        acc_id: user.account,
                         acc_name,
                         acc_no,
                         acc_bank
@@ -92,6 +93,7 @@ exports.add = async(req, res)=>{
                           statusCode: 201,
                           description: "account details updated successfully",
                           data: {
+                            acc_id,
                             acc_name,
                             acc_no,
                             acc_bank
