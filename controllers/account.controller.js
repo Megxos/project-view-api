@@ -10,36 +10,100 @@ exports.add = async(req, res)=>{
     }
     database.query(`SELECT * FROM users WHERE user_id = ${user_id}`, (error, result, fields)=>{
         if(error){
-            return res.send(error);
-        }
-        user = result[0];
-        console.log("user:", result);
-        if(user.account != null){
-            return res.status(409).json({
-                success: false,
-                message: "operation unsuccessful",
-                error: {
-                    statusCode: 409,
-                    description: "account datails up to date"
-                }
-            });
-        }
-        database.query(
-            `INSERT INTO accounts(acc_name, acc_no, acc_bank) VALUES(?, ?,?)`,
-            [acc_name, acc_no, acc_bank],
-            (error, result, fields) => {
+          return res.status(500).json({
+            success: false,
+            message: "operation unsuccessful",
+            error: {
+              statusCode: 500,
+              description: "could not update account details",
+              error
+            }
+          });
+        }else{
+          user = result[0];
+          if (user.account != null) {
+            database.query(
+              `UPDATE accounts SET 
+            acc_name = '${acc_name}', 
+            acc_bank = '${acc_bank}', 
+            acc_no = '${acc_no}' 
+            WHERE acc_id = ${result[0].account}`,
+              (error, result, fields) => {
                 if (error) {
-                    return res.send(error);
+                  return res.status(500).json({
+                    success: false,
+                    message: "operation unsuccessful",
+                    error: {
+                      statusCode: 500,
+                      description: "could not update account details",
+                      error
+                    },
+                  });
+                }else{
+                  return res.status(201).json({
+                    success: true,
+                    message: "operation successful",
+                    data: {
+                      statusCode: 201,
+                      description: "account details updated successfully",
+                      data: {
+                        acc_name,
+                        acc_no,
+                        acc_bank
+                      }
+                    },
+                  });
                 }
-                console.log("result:", result);
-                acc_id = result.insertId;
-                database.query(`UPDATE users SET account = ${acc_id} WHERE user_id = ${user_id}`, (error, result, fields) => {
+              });
+          }else{
+            //else add new account
+            database.query(
+              `INSERT INTO accounts(acc_name, acc_no, acc_bank) VALUES(?, ?,?)`,
+              [acc_name, acc_no, acc_bank],
+              async (error, result) => {
+                if (error) {
+                  return res.status(500).json({
+                    success: false,
+                    message: "operation unsuccessful",
+                    error: {
+                      statusCode: 500,
+                      description: "could not update account details",
+                      error
+                    },
+                  });
+                } else {
+                  acc_id = result.insertId;
+                  await database.query(`UPDATE users SET account = ${acc_id} WHERE user_id = ${user_id}`, (error, result, fields) => {
                     if (error) {
-                        return res.send(error);
+                      return res.status(500).json({
+                        success: false,
+                        message: "operation unsuccessful",
+                        error: {
+                          statusCode: 500,
+                          description: "could not update account details",
+                          error
+                        },
+                      });
+                    } else {
+                      return res.status(201).json({
+                        success: true,
+                        message: "operation successful",
+                        data: {
+                          statusCode: 201,
+                          description: "account details updated successfully",
+                          data: {
+                            acc_name,
+                            acc_no,
+                            acc_bank
+                          }
+                        },
+                      });
                     }
-                    return res.json(result);
-                });
-            });
+                  });
+                }
+              });
+          }
+        }
     });
 };
 
