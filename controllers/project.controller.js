@@ -21,6 +21,7 @@ exports.new = async(req, res)=>{
             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
             code INT(5), 
             name TEXT, 
+            owner INT,
             FOREIGN KEY (owner) REFERENCES users(user_id)
         )`,
         (error, result, fields)=>{
@@ -31,7 +32,8 @@ exports.new = async(req, res)=>{
                     message: "operation unsuccessful",
                     error: {
                         statusCode: 500,
-                        description: "could not create project"
+                        description: "could not create project",
+                        error
                     }
                 });
             }
@@ -47,7 +49,8 @@ exports.new = async(req, res)=>{
                             message: "operation unsuccessful",
                             error: {
                                 statusCode: 500,
-                                description: "could not create project"
+                                description: "could not create project",
+                                error
                             }
                         });
                     }
