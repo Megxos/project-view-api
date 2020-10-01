@@ -13,12 +13,14 @@ const signin = require("./routes/signin");
 const account = require("./routes/account");
 const item = require("./routes/item");
 const project = require("./routes/projects");
+const user = require("./routes/user");
 
 app.use("/signup", signup);
 app.use("/signin", signin);
 app.use("/account", account);
 app.use("/item", item);
 app.use("/project", project);
+app.use("/user", user);
 
 const port = PORT || LOCAL_PORT;
 app.listen(port, ()=>{
