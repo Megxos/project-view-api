@@ -19,7 +19,7 @@ exports.new = async(req, res)=>{
     database.query(
         `CREATE TABLE IF NOT EXISTS projects(
             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-            code INT(5), 
+            code INT UNIQUE, 
             name TEXT, 
             owner INT,
             FOREIGN KEY (owner) REFERENCES users(user_id)
@@ -37,8 +37,6 @@ exports.new = async(req, res)=>{
                     }
                 });
             }
-            console.log("created projects table");
-
             database.query(
                 `INSERT INTO projects(code, name, owner) VALUES(?, ?, ?)`,
                 [project_code, name, user_id],

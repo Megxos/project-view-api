@@ -22,8 +22,9 @@ exports.add = async(req, res)=>{
             price TEXT, 
             quantity INT,
             status INT,
-            project INT(5),
-            FOREIGN KEY (project) REFERENCES projects(code)
+            project INT,
+            FOREIGN KEY (project) REFERENCES projects(code),
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )`, 
         (error)=>{
             console.log(error)
@@ -33,23 +34,23 @@ exports.add = async(req, res)=>{
                     message: "operation unsuccessful",
                     error: {
                         statusCode: 500,
-                        description: "could not add item"
+                        description: "could not add item",
+                        error
                     }
                 });
             }
-            console.log("created pending table");
-
             database.query(
                 `INSERT INTO items(item, price, quantity, status, project) VALUES(?, ?, ?, ?, ?)`,
                 [item, price, quantity, 1, project],
-                (error, result, fields) => {
+                (error, result) => {
                     if (error) {
                         return res.status(500).json({
                             success: false,
                             message: "operation unsuccessful",
                             error: {
                                 statusCode: 500,
-                                description: "could not add item"
+                                description: "could not add item",
+                                error
                             }
                         });
                     }
@@ -96,6 +97,7 @@ exports.getAll = async(req, res)=>{
             error: {
               statusCode: 500,
               description: "could not add item",
+              error
             },
           });
         }
@@ -123,6 +125,7 @@ exports.getPending = async(req, res)=>{
                 error: {
                     statusCode: 500,
                     description: "could not get items",
+                    error
                 },
             });
         }
@@ -150,6 +153,7 @@ exports.getCompleted = async (req, res) => {
                 error: {
                     statusCode: 500,
                     description: "could not get items",
+                    error
                 },
             });
         }
@@ -175,7 +179,8 @@ exports.markComplete = async(req, res)=>{
                 message: "operation unsuccessful",
                 error: {
                     statusCode: 500,
-                    description: "could not mark complete"
+                    description: "could not mark complete",
+                    error
                 }
             });
         }
@@ -194,8 +199,47 @@ exports.markComplete = async(req, res)=>{
 };
 
 exports.update = async(req, res)=>{
-    console.log(req);
-};
+    let { quantity, user_id } = req.body;
+    let { item } = req.params;
+
+    if(!quantity || !user_id){
+         return res.status(400).json({
+             success: false,
+             message: "operation unsuccessful",
+             error: {
+                 statusCode: 400,
+                 description: "quantity or user_id cannot be empty"
+             }
+         });
+    }
+
+    database.query(`UPDATE items SET quantity = ${quantity} WHERE id = ${item}`, (error, item)=>{
+        if(error){
+             return res.status(500).json({
+                 success: false,
+                 message: "operation unsuccessful",
+                 error: {
+                     statusCode: 500,
+                     description: "could not update item",
+                     error
+                 }
+             });
+        }else{
+             return res.status(201).json({
+                 success: false,
+                 message: "operation successful",
+                 data: {
+                     statusCode: 201,
+                     description: "item updated",
+                     item: {
+                         id: item,
+                         quantity
+                     }
+                 }
+             });
+        }
+    });
+}
 
 exports.delete = async(req, res)=>{
     let { item } = req.params;
@@ -207,6 +251,7 @@ exports.delete = async(req, res)=>{
             error: {
               statusCode: 500,
               description: "could not delete item",
+              error
             },
           });
         }
