@@ -6,7 +6,14 @@ exports.add = async(req, res)=>{
     let user, acc_id;
 
     if(!user_id || !acc_no || !acc_name || !acc_bank){
-        return res.send("bad request");
+        return res.status(400).json({
+          success: false,
+          message: "operation unsuccessful",
+          error: {
+            statusCode: 500,
+            description: "user_id, acc_no, acc_name or acc_bank cannot be empty",
+          }
+        });
     }
     database.query(`SELECT * FROM users WHERE user_id = ${user_id}`, (error, result, fields)=>{
         if(error){
@@ -107,6 +114,48 @@ exports.add = async(req, res)=>{
           }
         }
     });
+};
+
+exports.getAccount = async(req, res)=>{
+  const user_id = req.params.user_id;
+
+  database.query(`SELECT * FROM users WHERE user_id = ${user_id}`, (error, user)=>{
+    if(error){
+      return res.status(500).json({
+        success: false,
+        message: "operation unsuccessful",
+        error: {
+          statusCode: 500,
+          description: "could not get account details",
+          error,
+        },
+      });
+    }
+    database.query(`SELECT * FROM accounts WHERE acc_id = ${user[0].account}`, (error, account)=>{
+      if(error){
+        return res.status(500).json({
+          success: false,
+          message: "operation unsuccessful",
+          error: {
+            statusCode: 500,
+            description: "could not get account details",
+            error
+          },
+        });
+      }
+      else{
+        return res.status(200).json({
+          success: true,
+          message: "operation successful",
+          data: {
+            statusCode: 200,
+            description: "successfully retrieved account details",
+            account: account[0]
+          },
+        });
+      }
+    });
+  });
 };
 
 exports.update = async(req, res)=>{

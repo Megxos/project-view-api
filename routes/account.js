@@ -6,8 +6,10 @@ const auth = require("../auth/auth").verify;
 
 router.use("/", auth);
 
+router.get("/:user_id", accountController.getAccount);
+
 router.post("/", accountController.add);
 
-router.post("/update", accountController.update);
+router.put("/update", accountController.update);
 
 module.exports = router;
