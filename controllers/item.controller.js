@@ -27,7 +27,6 @@ exports.add = async(req, res)=>{
             createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )`, 
         (error)=>{
-            console.log(error)
             if(error){
                 return res.status(500).json({
                     success: false,
@@ -89,7 +88,7 @@ exports.getAll = async(req, res)=>{
         });
     }
 
-    database.query(`SELECT * FROM items WHERE code = ${code}`, (error, result)=>{
+    database.query(`SELECT * FROM items WHERE project = ${code}`, (error, result)=>{
         if (error) {
           return res.status(500).json({
             success: false,

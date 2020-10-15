@@ -19,7 +19,7 @@ exports.new = async(req, res)=>{
     database.query(
         `CREATE TABLE IF NOT EXISTS projects(
             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
-            code INT UNIQUE, 
+            code INT UNIQUE,
             name TEXT, 
             owner INT,
             FOREIGN KEY (owner) REFERENCES users(user_id)
