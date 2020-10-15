@@ -24,7 +24,7 @@ exports.new = async(req, res)=>{
             owner INT,
             FOREIGN KEY (owner) REFERENCES users(user_id)
         )`,
-        (error, result, fields)=>{
+        (error)=>{
             if(error){
                 console.log(error);
                 return res.status(500).json({
@@ -40,7 +40,7 @@ exports.new = async(req, res)=>{
             database.query(
                 `INSERT INTO projects(code, name, owner) VALUES(?, ?, ?)`,
                 [project_code, name, user_id],
-                (error, result, fields) => {
+                (error, result) => {
                     if (error) {
                         return res.status(500).json({
                             success: false,

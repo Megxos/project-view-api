@@ -107,7 +107,7 @@ exports.getAll = async(req, res)=>{
             data: {
                 statusCode: 200,
                 description: `all items in project ${code}`,
-                items: results
+                items: result
             }
         });
     });
