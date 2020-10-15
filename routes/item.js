@@ -5,7 +5,7 @@ const auth = require("../auth/auth").verify;
 
 router.use("/", auth);
 
-router.get("/", itemController.getAll);
+router.get("/:code", itemController.getAll);
 
 router.post("/",itemController.add);
 

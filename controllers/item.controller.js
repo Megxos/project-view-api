@@ -76,7 +76,7 @@ exports.add = async(req, res)=>{
 };
 
 exports.getAll = async(req, res)=>{
-    let { code, project } = req.body;
+    let { code, project } = req.params;
 
     if(!code){
         return res.status(400).json({
