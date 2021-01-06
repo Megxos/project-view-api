@@ -1,5 +1,5 @@
-const api = require("./src/api");
-const web = require("./src/web");
+const api = require("./api");
+const web = require("./web");
 const express = require("express");
 
 const app = express();

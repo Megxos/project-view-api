@@ -1,22 +1,15 @@
-const database = require("../../../config/database");
-const { response } = require("express");
+const database = require("../../config/database");
+const { body } = require("express-validator");
+
+exports.validateBody = () => [
+  body(["firstname", "lastname"]).isString(),
+  body("user_id").isNumeric(),
+];
 
 exports.update = async (req, res) => {
   let { firstname, lastname } = req.body;
 
   let { user_id } = req.params;
-
-  if (!firstname || !lastname || !user_id) {
-    return res.status(400).json({
-      success: false,
-      message: "operation unsucessful",
-      error: {
-        statusCode: 400,
-        description:
-          "firstname, lastname or user_id cannot be empty cannot be empty",
-      },
-    });
-  }
 
   database.query(
     `SELECT * FROM users WHERE user_id = ${user_id}`,

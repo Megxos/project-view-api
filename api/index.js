@@ -1,6 +1,6 @@
 require("dotenv").config();
 const router = require("express").Router();
-require("../../config/database");
+require("../config/database");
 
 const signup = require("./routes/signup");
 const signin = require("./routes/signin");
@@ -11,10 +11,10 @@ const user = require("./routes/user");
 
 router.use("/signup", signup);
 router.use("/signin", signin);
-router.use("/account", account);
-router.use("/item", item);
-router.use("/project", project);
-router.use("/user", user);
+router.use("/accounts", account);
+router.use("/items", item);
+router.use("/projects", project);
+router.use("/users", user);
 
 router.get("/", (req, res) => {
   res.status(200).json({

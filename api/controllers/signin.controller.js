@@ -1,4 +1,4 @@
-const database = require("../../../config/database");
+const database = require("../../config/database");
 const bcrypt = require("bcryptjs");
 
 exports.signin = async (req, res) => {
