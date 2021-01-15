@@ -4,7 +4,7 @@ const { body } = require("express-validator");
 exports.validateUpdate = () => [
   body(["project", "acc_no"]).isNumeric(),
   body(["acc_bank", "acc_name"]).isAlpha(),
-  body("bank_code").isNumeric().optional(),
+  body("bank_code").isNumeric(),
 ];
 
 exports.update = async (req, res) => {

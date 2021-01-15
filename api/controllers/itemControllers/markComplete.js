@@ -1,10 +1,10 @@
 const database = require("../../../config/database");
 
 exports.markComplete = async (req, res) => {
-  let { item } = req.params;
+  let { items } = req.body;
 
   database.query(
-    `UPDATE items SET status = ${0} WHERE id = ${item}`,
+    `UPDATE items SET status = ${0} WHERE id IN (${items})`,
     (error, result) => {
       if (error) {
         return res.status(500).json({
@@ -18,15 +18,15 @@ exports.markComplete = async (req, res) => {
         });
       }
       database.query(
-        `SELECT * FROM items WHERE id = ${item}`,
+        `SELECT * FROM items WHERE id IN (${items})`,
         (error, result) => {
           return res.status(200).json({
             success: true,
             message: "operation successful",
             data: {
               statusCode: 200,
-              description: "item marked as complete",
-              item: result[0],
+              description: "items marked as complete",
+              items: result,
             },
           });
         }

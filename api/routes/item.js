@@ -13,7 +13,7 @@ router.get("/pending/:project", itemControllers.getPending);
 
 router.get("/completed/:project", itemControllers.getCompleted);
 
-router.post("/complete/:item", itemControllers.markComplete);
+router.post("/complete", itemControllers.markComplete);
 
 router.put("/update/:item", itemControllers.update);
 
