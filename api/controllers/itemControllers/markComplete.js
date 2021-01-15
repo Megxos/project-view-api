@@ -2,7 +2,7 @@ const database = require("../../../config/database");
 
 exports.markComplete = async (req, res) => {
   let { items } = req.body;
-
+  items = JSON.parse(items);
   database.query(
     `UPDATE items SET status = ${0} WHERE id IN (${items})`,
     (error, result) => {
