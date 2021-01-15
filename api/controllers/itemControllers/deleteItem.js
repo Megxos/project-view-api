@@ -3,9 +3,9 @@ const database = require("../../../config/database");
 exports.deleteItem = async (req, res) => {
   let { items } = req.body;
   items = JSON.parse(items);
-  console.log(items);
+
   database.query(
-    `DELETE * FROM items WHERE id IN (${items})`,
+    `DELETE FROM items WHERE id IN (${items})`,
     (error, result) => {
       if (error) {
         return res.status(500).json({
